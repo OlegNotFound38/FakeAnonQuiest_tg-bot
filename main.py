@@ -20,3 +20,4 @@ bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. �
 
 
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
+# я зарегался и я ебал надю
