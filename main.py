@@ -10,8 +10,8 @@
 '''
 
 from pathlib import Path
-import telebot;             # импорты, чтобы питон понял что мы работаем с
-from telebot import types;  # тг ботами
+import telebot             # импорты, чтобы питон понял что мы работаем с
+from telebot import types  # тг ботами
 
 TOKEN = (Path(__file__).parent / "bot_API.txt").read_text(encoding="utf-8").strip()
 if not TOKEN:
