@@ -1,2 +1,1 @@
-past the bot API.
-where is get it, see in readme
+testAPI
