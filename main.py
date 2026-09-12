@@ -9,17 +9,13 @@
 чтобы Вова с Макаром быстрее втянулись
 '''
 
+from pathlib import Path
 import telebot;             # импорты, чтобы питон понял что мы работаем с
 from telebot import types;  # тг ботами
 
-TOKEN = ""; # ⁡⁢⁣⁢Kelfy нада чтобы токен импортировался из файла bot_API.txt⁡
+TOKEN = (Path(__file__).parent / "bot_API.txt").read_text(encoding="utf-8").strip()
+if not TOKEN:
+    raise RuntimeError("API пока не получен")
+
 bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. код отрабатывает именно тот бот, токен которого тут
-
-
-
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
-
-# я зарегался и я ебал надю
-
-#Ладно, я даже это удалять не буду (Олег)
-#my changes
