@@ -19,7 +19,6 @@ TOKEN = (Path(__file__).parent / "bot_API.txt").read_text(encoding="utf-8").stri
 if not TOKEN:
     raise RuntimeError("API пока не получен")
 
-bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. код отрабатывает именно тот бот, токен которого тут
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
 
 
@@ -33,3 +32,6 @@ def start(message):
         "Выбери действие:",
         reply_markup=keyboard,
     )
+
+
+bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. код отрабатывает именно тот бот, токен которого тут
