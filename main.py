@@ -24,14 +24,10 @@ bot.polling(none_stop=True, interval=0) # строка чтобы бот не о
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(types.KeyboardButton("Начать"))
-
     bot.send_message(
         message.chat.id,
-        "Выбери действие:",
-        reply_markup=keyboard,
-    )
+        "Добро пожаловать в бота👋\n С его помощью вы можете получить анонимные сообщения, либо отправлять их комунибудь зареганому в боте⚱️",
+        )
 
 
 bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. код отрабатывает именно тот бот, токен которого тут
