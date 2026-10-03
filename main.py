@@ -20,10 +20,22 @@ TOKEN = (Path(__file__).parent / "bot_API.txt").read_text(encoding="utf-8").stri
 if not TOKEN:
     raise RuntimeError("API пока не получен")
 bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. код отрабатывает именно тот бот, токен которого тут
+'''
+#@bot.message_handler(funk=lambda message: True) Функция, для автоматической обработки каждого присланного пользователем сообщения. Приберег на будущее
+def user_callback_text(message):
+    return message.text
+'''
 
+
+backKB = types.InlineKeyboardMarkup()
+backKB.add(types.InlineKeyboardButton("Назад 🔙", callback_data = "back"))
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    start_args = message.text.split()
+    #if (len(start_args[1]) > 1):
+        
+    
     start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1)
     start_menu_keyboard.add(
         types.InlineKeyboardButton(
@@ -42,7 +54,7 @@ def start(message):
         
     bot.send_message(
         message.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
-        """Добро пожаловать в бота👋 # 
+        """Добро пожаловать в бота👋 
         С его помощью вы можете:
         Получить анонимные сообщения 📥
         Отправлять их пользователям зареганым в боте 📤
@@ -54,14 +66,26 @@ def start(message):
         reply_markup = start_menu_keyboard
         )
     
+@bot.message_handler(commands=['getLink'])
+def getLink(message):
+    bot.send_message(
+        message.chat.id,
+        f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={message.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь",
+        reply_markup = backKB
+    )
+    
 @bot.callback_query_handler(func=lambda call: True) # Большой обработчик всех инлайн-кнопок в боте
 def buttons(call):
 # ОСНОВНОЕ МЕНЮ
     if call.data == "get_link":
-        start(call.message)
+        getLink(call.message)
     if call.data == "send_message":
         start(call.message)
     if call.data == "support":
+        start(call.message)
+        
+# ОБЩИЕ
+    if call.data == "back":
         start(call.message)
 
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
