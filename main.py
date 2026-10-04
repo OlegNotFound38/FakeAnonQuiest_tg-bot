@@ -32,6 +32,24 @@ def user_callback_text(message):
 backKB = types.InlineKeyboardMarkup()
 backKB.add(types.InlineKeyboardButton("Назад 🔙", callback_data = "back"))
 
+    
+start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1)
+start_menu_keyboard.add(
+    types.InlineKeyboardButton(
+        "Получить личную ссылку 🔗",
+        callback_data = "get_link"
+    ),
+    types.InlineKeyboardButton(
+        "Отправить пользователю соробщение 📬",
+        callback_data = "send_message"
+    ),
+    types.InlineKeyboardButton(
+        "❗Написать в поддержку❗",
+        callback_data = "support"
+    )
+)
+
+
 def send_anon_mesg(recipient_id, message):
     bot.send_message(
         recipient_id,
@@ -54,25 +72,17 @@ def send_anon_mesg(recipient_id, message):
     )
     bot.send_message(message.from_user.id, "Сообщение отправлено ✅")
     
+@bot.message_handler(commands=["SendMessage"])
+def choose_user(call):
+    bot.send_message(
+        call.from_user.id,
+        "К сожелению эта функция пока не работает, но мы это уже чиним", #МАКАР
+        reply_markup = backKB
+    )
+    
 @bot.message_handler(commands=["start"])
 def start(message):
     start_args = message.text.split()
-    
-    start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1)
-    start_menu_keyboard.add(
-        types.InlineKeyboardButton(
-            "Получить личную ссылку 🔗",
-            callback_data = "get_link"
-        ),
-        types.InlineKeyboardButton(
-            "Отправить пользователю соробщение 📬",
-            callback_data = "send_message"
-        ),
-        types.InlineKeyboardButton(
-            "❗Написать в поддержку ❗",
-            callback_data = "support"
-        )
-    )
         
     bot.send_message(
         message.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
@@ -96,7 +106,21 @@ def start(message):
         )
         bot.register_next_step_handler(message, partial(send_anon_mesg, start_args[1]))
             
-    
+def backStart(call):
+    bot.send_message(
+    call.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
+    """Добро пожаловать в бота👋
+    С его помощью вы можете:
+    Получить анонимные сообщения 📥
+    Отправлять их пользователям зареганым в боте 📤
+    Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅ 
+        
+    К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝
+        
+    Функционал Бота находится ниже, приятного использования 🤗""",
+    reply_markup = start_menu_keyboard
+    )
+
 @bot.message_handler(commands=['getLink'])
 def getLink(call):
     bot.send_message(
@@ -110,11 +134,12 @@ def buttons(call):
 # ОСНОВНОЕ МЕНЮ
     if call.data == "get_link":
         getLink(call)
-#    if call.data == "send_message":
+    if call.data == "send_message":
+        choose_user(call)
 #    if call.data == "support":
         
 # ОБЩИЕ
     if call.data == "back":
-        start(call.message)
+        backStart(call.message)
 
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
