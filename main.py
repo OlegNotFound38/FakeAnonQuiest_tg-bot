@@ -30,10 +30,17 @@ def user_callback_text(message):
 backKB = types.InlineKeyboardMarkup()
 backKB.add(types.InlineKeyboardButton("Назад 🔙", callback_data = "back"))
 
+
+
 @bot.message_handler(commands=["start"])
 def start(message):
     start_args = message.text.split()
-    #if (len(start_args[1]) > 1):
+    if (len(start_args[1]) > 1):
+        bot.send_message(
+            message.chat.id,
+            f"Напишите сообщение, и бот анонимно передаст его:"
+        )
+        bot.register_next_step_handler(message, )
         
     
     start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1)
@@ -54,7 +61,7 @@ def start(message):
         
     bot.send_message(
         message.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
-        """Добро пожаловать в бота👋 
+        """Добро пожаловать в бота👋
         С его помощью вы можете:
         Получить анонимные сообщения 📥
         Отправлять их пользователям зареганым в боте 📤
