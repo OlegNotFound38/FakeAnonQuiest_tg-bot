@@ -38,7 +38,7 @@ def start(message):
     if (len(start_args[1]) > 1):
         bot.send_message(
             message.chat.id,
-            f"Напишите сообщение, и бот анонимно передаст его:"
+            f"Напишите сообщение🖋️, и бот анонимно передаст его😊:"
         )
         bot.register_next_step_handler(message, )
         
