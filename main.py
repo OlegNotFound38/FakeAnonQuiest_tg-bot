@@ -72,8 +72,10 @@ def send_anon_mesg(recipient_id, message):
     )
     bot.send_message(message.from_user.id, "Сообщение отправлено ✅")
     
-@bot.message_handler(commands=["SendMessage"])
+@bot.callback_querty_handler(funk = lambda call: call.data == "send_message")
 def choose_user(call):
+    bot.answer_callback_query(call.id)
+    
     bot.send_message(
         call.from_user.id,
         "К сожелению эта функция пока не работает, но мы это уже чиним", #МАКАР
@@ -101,12 +103,15 @@ def start(message):
     if (len(start_args) > 1):
         bot.send_message(
             message.chat.id,
-            f"Напишите сообщение🖋️, и бот анонимно передаст его😊:",
+            f"Напишите сообщение🖋️, и бот анонимно передаст его😊\nМожешь не беспокоиться, никто не узнает что соощение написал именно ты, даже создатель бота🤝👍",
             reply_markup = backKB
         )
         bot.register_next_step_handler(message, partial(send_anon_mesg, start_args[1]))
-            
+
+@bot.callback_querty_handler(funk = lambda call: "back")
 def backStart(call):
+    bot.answer_callback_query(call.id)
+    
     bot.send_message(
     call.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
     """Добро пожаловать в бота👋
@@ -123,23 +128,13 @@ def backStart(call):
 
 @bot.message_handler(commands=['getLink'])
 def getLink(call):
+    bot.answer_callback_query(call.id)
+    
     bot.send_message(
         call.message.chat.id,
         f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={call.message.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь❤️",
         reply_markup = backKB
     )
-    
-@bot.callback_query_handler(func=lambda call: True) # Большой обработчик всех инлайн-кнопок в боте
-def buttons(call):
-# ОСНОВНОЕ МЕНЮ
-    if call.data == "get_link":
-        getLink(call)
-    if call.data == "send_message":
-        choose_user(call)
-#    if call.data == "support":
-        
-# ОБЩИЕ
-    if call.data == "back":
-        backStart(call.message)
+
 
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
