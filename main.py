@@ -24,16 +24,17 @@ if not TOKEN:
     raise RuntimeError("API пока не получен")
 bot = telebot.TeleBot(TOKEN) # токен/айпи от нашего бота. код отрабатывает именно тот бот, токен которого тут
 '''
-#@bot.message_handler(funk=lambda message: True) Функция, для автоматической обработки каждого присланного пользователем сообщения. Приберег на будущее
+#@bot.message_handler(func=lambda message: True) Функция, для автоматической обработки каждого присланного пользователем сообщения. Приберег на будущее
 def user_callback_text(message):
     return message.text
 '''
 
-backKB = types.InlineKeyboardMarkup()
+
+
+backKB = types.InlineKeyboardMarkup() # Набор инлайн-кнопок для возвращения в главное меню
 backKB.add(types.InlineKeyboardButton("Назад 🔙", callback_data = "back"))
 
-    
-start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1)
+start_menu_keyboard = types.InlineKeyboardMarkup(row_width = 1) #интайн-кнопки для главного меню
 start_menu_keyboard.add(
     types.InlineKeyboardButton(
         "Получить личную ссылку 🔗",
@@ -50,10 +51,10 @@ start_menu_keyboard.add(
 )
 
 
-def send_anon_mesg(recipient_id, message):
+def send_anon_mesg(recipient_id, message): # функция для обработки отправки анонимного сообщения по ссылке
     bot.send_message(
         recipient_id,
-        "Новое Сообщение!",# МАКАР поставь смайлик пж, потом этот текст убери
+        "Новое Сообщение!",# ⁡⁢⁣⁢МАКАР поставь смайлик пж, потом этот текст убери⁡
     )
     
     if (recipient_id == "5322133846"): # ⁡⁢⁣⁢Kelfy, надо сделать цикл, который будет сравнивать message.from_user.id с нашими айди которые будут храниться в файле negodniki.txt⁡
@@ -72,31 +73,31 @@ def send_anon_mesg(recipient_id, message):
     )
     bot.send_message(message.from_user.id, "Сообщение отправлено ✅")
     
-@bot.callback_querty_handler(funk = lambda call: call.data == "send_message")
+@bot.callback_query_handler(func = lambda call: call.data == "send_message") # Функция, которая отвечает за отправке соо пользователю по его ID
 def choose_user(call):
     bot.answer_callback_query(call.id)
     
     bot.send_message(
         call.from_user.id,
-        "К сожелению эта функция пока не работает, но мы это уже чиним", #МАКАР
+        "К сожелению эта функция пока не работает, но мы это уже чиним", #⁡⁢⁣⁢МАКАР⁡ ⁡⁢⁣⁢эмодзи⁡
         reply_markup = backKB
     )
     
-@bot.message_handler(commands=["start"])
+@bot.message_handler(commands=["start"]) #Функция которая запускается при первом запуске бота, ну или по команде start
 def start(message):
-    start_args = message.text.split()
+    start_args = message.text.split() # переменная,хранящая id того, кому хотел написать тип
         
     bot.send_message(
-        message.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
-        """Добро пожаловать в бота👋
-        С его помощью вы можете:
-        Получить анонимные сообщения 📥
-        Отправлять их пользователям зареганым в боте 📤
-        Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅ 
+        message.chat.id,
+        "Добро пожаловать в бота👋\n"
+        "С его помощью вы можете:\n"
+        "Получить анонимные сообщения 📥\n"
+        "Отправлять их пользователям зареганым в боте 📤\n"
+        "Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅\n\n"
         
-        К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝
+        "К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝\n\n"
         
-        Функционал Бота находится ниже, приятного использования 🤗""",
+        "Функционал Бота находится ниже, приятного использования 🤗\n",
         reply_markup = start_menu_keyboard
         )
     
@@ -108,31 +109,31 @@ def start(message):
         )
         bot.register_next_step_handler(message, partial(send_anon_mesg, start_args[1]))
 
-@bot.callback_querty_handler(funk = lambda call: "back")
+@bot.callback_query_handler(func = lambda call: call.data == "back") # Такой же старт, только работающий по кнопке back. Ну главное меню по сути
 def backStart(call):
     bot.answer_callback_query(call.id)
     
     bot.send_message(
-    call.chat.id, # ⁡⁢⁣⁢Kelfy, закинь в ГПТшник, спроси как пофиксить проблему. А, ну и попроси мения переслать че выводит бот, а то ты не в курсах⁡
-    """Добро пожаловать в бота👋
-    С его помощью вы можете:
-    Получить анонимные сообщения 📥
-    Отправлять их пользователям зареганым в боте 📤
-    Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅ 
+    call.chat.id,
+    "Добро пожаловать в бота👋\n"
+    "С его помощью вы можете:\n"
+    "Получить анонимные сообщения 📥\n"
+    "Отправлять их пользователям зареганым в боте 📤\n"
+    "Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅\n\n"
+     
+    "К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝\n\n"
         
-    К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝
-        
-    Функционал Бота находится ниже, приятного использования 🤗""",
+    "Функционал Бота находится ниже, приятного использования 🤗\n",
     reply_markup = start_menu_keyboard
     )
 
-@bot.message_handler(commands=['getLink'])
+@bot.callback_query_handler(func = lambda call: call.data == "get_link")
 def getLink(call):
     bot.answer_callback_query(call.id)
     
     bot.send_message(
         call.message.chat.id,
-        f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={call.message.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь❤️",
+        f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={call.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь❤️",
         reply_markup = backKB
     )
 
