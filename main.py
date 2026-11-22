@@ -31,6 +31,8 @@ def user_callback_text(message):
 
 
 
+
+
 backKB = types.InlineKeyboardMarkup() # Набор инлайн-кнопок для возвращения в главное меню
 backKB.add(types.InlineKeyboardButton("Назад 🔙", callback_data = "back"))
 
@@ -52,6 +54,8 @@ start_menu_keyboard.add(
 
 
 def send_anon_mesg(recipient_id, message): # функция для обработки отправки анонимного сообщения по ссылке
+    if (recipient_id == message.from_user.id): return
+    
     bot.send_message(
         recipient_id,
         "Новое Сообщение!",# ⁡⁢⁣⁢МАКАР поставь смайлик пж, потом этот текст убери⁡
@@ -71,7 +75,7 @@ def send_anon_mesg(recipient_id, message): # функция для обрабо�
         recipient_id,
         message.text
     )
-    bot.send_message(message.from_user.id, "Сообщение отправлено ✅")
+    bot.send_message(message.from_user.id, "Сообщение доставлено ✅")
     
 @bot.callback_query_handler(func = lambda call: call.data == "send_message") # Функция, которая отвечает за отправке соо пользователю по его ID
 def choose_user(call):
@@ -95,7 +99,7 @@ def start(message):
         "Отправлять их пользователям зареганым в боте 📤\n"
         "Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅\n\n"
         
-        "К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝\n\n"
+        "К сожалению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝\n\n"
         
         "Функционал Бота находится ниже, приятного использования 🤗\n",
         reply_markup = start_menu_keyboard
@@ -121,7 +125,7 @@ def backStart(call):
     "Отправлять их пользователям зареганым в боте 📤\n"
     "Задать любой вопрос в поддержку❓ Постараемся ответить как можно быстрее✅\n\n"
      
-    "К сожелению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝\n\n"
+    "К сожалению это пока весь функционал бота, но мы планируем расширяться, и будем рады новым идеям улучшения сервиса 🤝\n\n"
         
     "Функционал Бота находится ниже, приятного использования 🤗\n",
     reply_markup = start_menu_keyboard
@@ -136,6 +140,11 @@ def getLink(call):
         f"Вот твоя личная ссылка:\nhttps://t.me/anon_quiest_bot?start={call.from_user.id}\nМожешь прикрепить её в описании, или выложить куда-нибудь❤️",
         reply_markup = backKB
     )
+    
+# Команды для админов ниже
+
+#@bot.message_handler(commands=["add"]) #Функция которая запускается при первом запуске бота, ну или по команде start
+#def start(message):
 
 
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
