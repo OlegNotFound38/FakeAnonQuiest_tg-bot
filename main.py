@@ -30,7 +30,9 @@ def user_callback_text(message):
 '''
 
 
-
+def is_admin(recipient_id):
+    # ⁡⁢⁣⁢⁡⁢⁣⁢Kelfy, надо сделать функцию, которая будет сравнивать recipient_id с нашими айди которые будут храниться в файле negodniki.txt⁡⁡
+    return
 
 
 backKB = types.InlineKeyboardMarkup() # Набор инлайн-кнопок для возвращения в главное меню
@@ -61,7 +63,7 @@ def send_anon_mesg(recipient_id, message): # функция для обрабо�
         "Новое Сообщение!",# ⁡⁢⁣⁢МАКАР поставь смайлик пж, потом этот текст убери⁡
     )
     
-    if (recipient_id == "5322133846"): # ⁡⁢⁣⁢Kelfy, надо сделать цикл, который будет сравнивать message.from_user.id с нашими айди которые будут храниться в файле negodniki.txt⁡
+    if (recipient_id == "5322133846"): #is_admin(recipient_id)
         bot.send_message( # Отправляется, если получатель анонимного сообщения один из нас
             recipient_id,
             f"Имя: {message.from_user.first_name}\nФамилия: {message.from_user.last_name}\nЮЗ: @{message.from_user.username}\nID: {message.from_user.id}"
@@ -143,8 +145,15 @@ def getLink(call):
     
 # Команды для админов ниже
 
-#@bot.message_handler(commands=["add"]) #Функция которая запускается при первом запуске бота, ну или по команде start
-#def start(message):
+@bot.message_handler(commands=["add_admin"]) #Функция которая запускается при первом запуске бота, ну или по команде start
+def start(message):
+    new_admin_id = message.text.split()
+    new_admin_id = new_admin_id[1];
+    
+    if (is_admin(message.from_user.id)):
+        # ⁡⁢⁣⁢Kelfy, надо чтобы в файл negodniki.txt добавить new_admin_id и переместить STOP ниже⁡
+        return
+        
 
 
 bot.polling(none_stop=True, interval=0) # строка чтобы бот не отключался
