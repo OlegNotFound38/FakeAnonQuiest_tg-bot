@@ -72,10 +72,12 @@ def send_anon_mesg(recipient_id, message): # функция для обрабо�
             "Сообщение: "
         )
         
-    bot.send_message(
-        recipient_id,
-        message.text
+    bot.copy_message( # Функция "анонимно" пересылающая сообшение 
+        recipient_id, # Кому
+        message.from_user.id, # от кого 
+        message.id #  ID сообщения
     )
+    
     
 @bot.callback_query_handler(func = lambda call: call.data == "send_message") # Функция, которая отвечает за отправке соо пользователю по его ID
 def choose_user(call):
