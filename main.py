@@ -76,7 +76,6 @@ def send_anon_mesg(recipient_id, message): # функция для обрабо�
         recipient_id,
         message.text
     )
-    bot.send_message(message.from_user.id, "Сообщение доставлено ✅")
     
 @bot.callback_query_handler(func = lambda call: call.data == "send_message") # Функция, которая отвечает за отправке соо пользователю по его ID
 def choose_user(call):
@@ -91,6 +90,9 @@ def choose_user(call):
 @bot.message_handler(commands=["start"]) #Функция которая запускается при первом запуске бота, ну или по команде start
 def start(message):
     start_args = message.text.split() # переменная,хранящая id того, кому хотел написать тип
+    
+    if (len(start_args) > 1):# Проверка, что тот кому хочет написать чел, не является этим челом, и не нажал на конопкук по ошибке
+        if (int(start_args[1]) == message.from_user.id): return
         
     bot.send_message(
         message.chat.id,
@@ -106,14 +108,14 @@ def start(message):
         reply_markup = start_menu_keyboard
         )
     
-    if (len(start_args) > 1):
-        if (start_args[1] != message.from_user.id): # Проверка, что тот кому хочет написать чел, не является этим челом, и не нажал на конопкук по ошибке
-            bot.send_message(
-                message.chat.id,
-                f"Напишите сообщение🖋️, и бот анонимно передаст его😊\nМожешь не беспокоиться, никто не узнает что соощение написал именно ты, даже создатель бота🤝👍",
-                reply_markup = backKB
+    if (len(start_args) > 1): 
+        bot.send_message(
+            message.chat.id,
+            f"Напишите сообщение🖋️, и бот анонимно передаст его😊\nМожешь не беспокоиться, никто не узнает что соощение написал именно ты, даже создатель бота🤝👍",
+            reply_markup = backKB
             )
-            bot.register_next_step_handler(message, partial(send_anon_mesg, start_args[1]))
+        
+        bot.register_next_step_handler(message, partial(send_anon_mesg, start_args[1]))
 
 @bot.callback_query_handler(func = lambda call: call.data == "back") # Такой же старт, только работающий по кнопке back. Ну главное меню по сути
 def backStart(call):
